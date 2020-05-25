@@ -1,4 +1,4 @@
-module github.com/advoretsky/atlassian-api/v2/orgs
+module github.com/advoretsky/atlassian-api/orgs
 
 require (
 	github.com/antihax/optional v1.0.0

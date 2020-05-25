@@ -1,3 +1,3 @@
-module github.com/advoretsky/atlassian-api/v2
+module github.com/advoretsky/atlassian-api
 
 go 1.14

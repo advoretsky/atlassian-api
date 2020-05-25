@@ -84,7 +84,7 @@ func NewConfiguration() *Configuration {
 	cfg := &Configuration{
 		BasePath:      "https://api.atlassian.com/admin/v1/orgs",
 		DefaultHeader: make(map[string]string),
-		UserAgent:     "OpenAPI-Generator/2.0.5/go",
+		UserAgent:     "OpenAPI-Generator/0.1.0/go",
 		Debug:         false,
 		Servers:       []ServerConfiguration{
 			{
