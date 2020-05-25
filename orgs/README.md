@@ -1,4 +1,4 @@
-# Go API client for v2/orgs
+# Go API client for orgs
 
 Atlassian Administration API
 
@@ -23,7 +23,7 @@ go get github.com/antihax/optional
 Put the package under your project folder and add the following in import:
 
 ```golang
-import "./v2/orgs"
+import "./orgs"
 ```
 
 ## Documentation for API Endpoints
