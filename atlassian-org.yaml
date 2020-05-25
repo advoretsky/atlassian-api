@@ -1,0 +1,132 @@
+swagger: "2.0"
+info:
+  title: Atlassian Administration API
+  description: Atlassian Administration API
+  version: 1.0.0
+
+host: api.atlassian.com
+basePath: /admin/v1/orgs
+schemes:
+  - https
+
+securityDefinitions:
+  basicAuth:
+    type: basic
+
+security:
+  - basicAuth: []
+
+paths:
+  /{orgId}/users:
+    get:
+      description: |
+        Returns a list of users in an organization.
+      produces:
+        - application/json
+      parameters:
+        - name: orgId
+          in: path
+          description: ID of the organization to query
+          required: true
+          type: string
+        - name: cursor
+          in: query
+          description: Sets the starting point for the page of results to return.
+          required: false
+          type: string
+      responses:
+        200:
+          description: Successful operation
+          schema:
+            $ref: '#/definitions/UserPageResponse'
+        '400':
+            description: Invalid page cursor
+
+definitions:
+  Links:
+    type: object
+    allOf:
+      - type: object
+        properties:
+          self:
+            type: string
+          next:
+            type: string
+  UserPageResponse:
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/UserPage'
+      links:
+        $ref: '#/definitions/Links'
+  UserPage:
+    type: array
+    items:
+      $ref: '#/definitions/User'
+  User:
+    allOf:
+      - type: object
+        properties:
+          account_id:
+            type: string
+            description: The account ID for the user. The format is a-zA-Z0-9_|-:{1,128}
+          account_type:
+            type: string
+            description: |
+              Valid values: `atlassian`, `customer`, `app`
+          account_status:
+            type: string
+            description: |
+              The lifecycle status of the account
+
+              Valid values: `active`, `inactive, `closed`
+          name:
+            type: string
+            description: |
+              The display name of the user. Should be used for contextual rendering of the authorship in content.
+              If the user has restricted visibility of their name, their nickname will be displayed as a
+              substitute value
+          picture:
+            type: string
+            description: |
+              The absolute URI (RFC3986) to the avatar name of the user. Should be used for contextual rendering
+              of the authorship in content. If the user has restricted visibility of their avatar, an alternative
+              URI will be provided as a substitute value
+          email:
+            type: string
+            description: |
+              The email address of the user. If the user has restricted visibility of the email address, the
+              property will be absent
+          access_billable:
+            type: boolean
+            description: Billable status of User in Atlassian Access
+          last_active:
+            type: string
+            description: Last active date for a user
+        required:
+          - account_id
+          - account_type
+          - account_status
+          - name
+          - picture
+        example: {
+          "account_id": "<string>",
+          "account_type": "atlassian",
+          "account_status": "active",
+          "name": "<string>",
+          "picture": "<string>",
+          "email": "<string>",
+          "access_billable": true,
+          "last_active": "<string>",
+          "product_access": [
+          {
+            "key": "jira-software",
+            "name": "<string>",
+            "url": "<string>",
+            "last_active": "<string>"
+          }
+          ],
+          "links": {
+            "self": "<string>"
+          }
+        }

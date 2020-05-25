@@ -1,0 +1,119 @@
+openapi: 3.0.1
+info:
+  description: Atlassian Administration API
+  title: Atlassian Administration API
+  version: 1.0.0
+servers:
+- url: https://api.atlassian.com/admin/v1/orgs
+security:
+- basicAuth: []
+paths:
+  /{orgId}/users:
+    get:
+      description: |
+        Returns a list of users in an organization.
+      parameters:
+      - description: ID of the organization to query
+        in: path
+        name: orgId
+        required: true
+        schema:
+          type: string
+      - description: Sets the starting point for the page of results to return.
+        in: query
+        name: cursor
+        schema:
+          type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPageResponse'
+          description: Successful operation
+        "400":
+          content: {}
+          description: Invalid page cursor
+components:
+  schemas:
+    Links:
+      allOf:
+      - $ref: '#/components/schemas/Links_allOf'
+    UserPageResponse:
+      example:
+        data:
+        - null
+        - null
+      properties:
+        data:
+          items:
+            $ref: '#/components/schemas/User'
+          type: array
+        links:
+          $ref: '#/components/schemas/Links'
+      type: object
+    UserPage:
+      items:
+        $ref: '#/components/schemas/User'
+      type: array
+    User:
+      allOf:
+      - $ref: '#/components/schemas/User_allOf'
+    Links_allOf:
+      properties:
+        self:
+          type: string
+        next:
+          type: string
+    User_allOf:
+      example: '{account_id=<string>, account_type=atlassian, account_status=active,
+        name=<string>, picture=<string>, email=<string>, access_billable=true, last_active=<string>,
+        product_access=[{key=jira-software, name=<string>, url=<string>, last_active=<string>}],
+        links={self=<string>}}'
+      properties:
+        account_id:
+          description: The account ID for the user. The format is a-zA-Z0-9_|-:{1,128}
+          type: string
+        account_type:
+          description: |
+            Valid values: `atlassian`, `customer`, `app`
+          type: string
+        account_status:
+          description: |
+            The lifecycle status of the account
+
+            Valid values: `active`, `inactive, `closed`
+          type: string
+        name:
+          description: |
+            The display name of the user. Should be used for contextual rendering of the authorship in content.
+            If the user has restricted visibility of their name, their nickname will be displayed as a
+            substitute value
+          type: string
+        picture:
+          description: |
+            The absolute URI (RFC3986) to the avatar name of the user. Should be used for contextual rendering
+            of the authorship in content. If the user has restricted visibility of their avatar, an alternative
+            URI will be provided as a substitute value
+          type: string
+        email:
+          description: |
+            The email address of the user. If the user has restricted visibility of the email address, the
+            property will be absent
+          type: string
+        access_billable:
+          description: Billable status of User in Atlassian Access
+          type: boolean
+        last_active:
+          description: Last active date for a user
+          type: string
+      required:
+      - account_id
+      - account_status
+      - account_type
+      - name
+      - picture
+  securitySchemes:
+    basicAuth:
+      scheme: basic
+      type: http
